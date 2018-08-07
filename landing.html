@@ -1,0 +1,300 @@
+<html>
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PrintArea/2.4.1/jquery.PrintArea.js"></script>
+    <script src="jquery.js"></script>
+    <script src="jquery.PrintArea.js"></script>
+
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!--<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+!-->
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<style>
+    .w3-container:after,.w3-container:before,.w3-panel:after,.w3-panel:before,.w3-row:after,.w3-row:before,.w3-row-padding:after,.w3-row-padding:before,
+    .w3-cell-row:before,.w3-cell-row:after,.w3-clear:after,.w3-clear:before,.w3-bar:before,.w3-bar:after{content:"";display:table;clear:both}
+
+    .w3-container,.w3-panel{padding:0.01em 16px;margin-top:16px;margin-bottom:16px;margin-left:2.5%;width:95%;}
+
+    .w3-row-padding,.w3-row-padding>.w3-half,.w3-row-padding>.w3-third,.w3-row-padding>.w3-twothird,.w3-row-padding>.w3-threequarter,.w3-row-padding>.w3-quarter,.w3-row-padding>.w3-col{padding:.01em 8px}
+
+    .w3-col,.w3-half,.w3-third,.w3-twothird,.w3-threequarter,.w3-quarter{float:left;width:100%}
+
+    @media (min-width:100px){.w3-col.m1{width:8.33333%}.w3-col.m2{width:16.66666%}.w3-col.m3,.w3-quarter{width:24.99999%}.w3-col.m4,.w3-third{width:33.33333%}
+
+    .w3-row-padding,.w3-row-padding>.w3-half,.w3-row-padding>.w3-third,.w3-row-padding>.w3-twothird,.w3-row-padding>.w3-threequarter,.w3-row-padding>.w3-quarter,.w3-row-padding>.w3-col{padding:0 8px}
+
+    .btn {
+      white-space:normal;
+    }
+
+      div #clock {
+      font-size:28px;
+    }
+
+    .radio input[type="radio"] {
+      float:none;
+      margin-left:5px;
+    }
+
+    body {
+        background-color: yellow;
+        font-family: 'Open Sans', sans-serif;
+    }
+
+    .w3-container{
+        background: rgba(250,250,51,.2);
+    }
+</style>
+
+<script>
+
+$(document).ready(function(){
+    $("#printButton").click(function(){
+        var mode = 'iframe'; //popup
+        var close = mode == "popup";
+        var options = { mode : mode, popClose : close};
+        $("div.printableArea").printArea( options );
+    });
+});
+</script>
+
+<script>
+    var visitorsToday;
+    
+  var possibleRepairs = [
+    {
+      area: "Front wheel",
+      repair: "out of true",
+      isNeeded: false,
+    },
+    {
+      area: "Front hub",
+      repair: "needs tightening",
+      isNeeded: false
+    },
+    {
+      area: "Front brake",
+      repair: "needs repair",
+      isNeeded: false
+    },
+    {
+      area: "Headset",
+      repair: "needs tightening",
+      isNeeded: false
+    }
+  ];
+  /*
+    function sendToPrintArea() {
+      var arrayOfVolunteers = [];
+      var theName;
+      document.getElementById("theName").style.color = "red";
+      theName = document.getElementById("theName");
+      arrayOfVolunteers.push(theName);
+      document.getElementById('printArea').innerHTML = theName + ".";
+    }
+
+        function printThings() {
+      var prtContent = document.getElementById("theseRepairsNeeded");
+      var WinPrint = window.open('', '', 'left=0,top=0,width=800,height=900,toolbar=0,scrollbars=0,status=0');
+      WinPrint.document.write(prtContent.innerHTML);
+      WinPrint.document.close();
+      WinPrint.focus();
+      WinPrint.print();
+      WinPrint.close();
+    }
+    */
+
+  function initPage() {
+    document.getElementById('repairsGoHere').innerHTML = "We'll need repairs soon!";
+    document.getElementById("button1").addEventListener("click", function() {
+      addVisitor();
+      buttChangeColor("button1","btn-success","button2","btn-default");
+    });
+    document.getElementById("button2").addEventListener("click", function() {
+      addRepair("0", true);
+      buttChangeColor("button2","btn-danger","button1","btn-default");
+    });
+    document.getElementById("button3").addEventListener("click", function() {
+      addRepair("1", false);
+      buttChangeColor("button3","btn-success","button4","btn-default");
+    });
+    document.getElementById("button4").addEventListener("click", function() {
+      addRepair("1", true);
+      buttChangeColor("button4","btn-danger","button3","btn-default");
+    });
+    document.getElementById("button5").addEventListener("click", function() {
+      addRepair("2", false);
+      buttChangeColor("button5","btn-success","button6","btn-default");
+    });
+    document.getElementById("button6").addEventListener("click", function() {
+      addRepair("2", true);
+      buttChangeColor("button6","btn-danger","button5","btn-default");
+    });
+    document.getElementById("button7").addEventListener("click", function() {
+      addRepair("3", false);
+      buttChangeColor("button7","btn-success","button8","btn-default");
+    });
+    document.getElementById("button8").addEventListener("click", function() {
+      addRepair("3", true);
+      buttChangeColor("button8","btn-danger","button7","btn-default");
+    });
+  }
+
+
+  function changeColor(where, color, opposite, ind) {
+    document.getElementById(opposite).style.color = "black";
+    document.getElementById(where).style.color = color;
+  }
+
+  function buttChangeColor(where, newClass, opposite, newClass2) {
+    document.getElementById(where).className = "btn " + newClass;
+    document.getElementById(opposite).className = "btn " + newClass2;
+
+  }
+
+  function addVisitor() {
+      var volName = document.getElementById('repairsGoHere').value;  
+      
+    possibleRepairs[here].isNeeded = needed;
+    var filteredArray = possibleRepairs.filter(ind => ind.isNeeded).map(ind => ind.area + " " + ind.repair).join("\<br\>");
+    document.getElementById('repairsGoHere').innerHTML = filteredArray;
+  }
+
+
+
+  function displayClock() {
+    var time = new Date();
+    var hrs = time.getHours();
+    var min = time.getMinutes();
+    var themon = (time.getMonth() + 1);
+    var theday = time.getDate();
+    if (hrs > 12) {
+      hrs = hrs - 12;
+    }
+    if ((min == 0)) {
+      min = "00";
+    }
+    if ((min < 10) && (min != 0)) {
+      min = "0" + min;
+    }
+    document.getElementById('clock').innerHTML = themon + '/' + theday + "    " + hrs + ':' + min;
+  }
+</script>
+
+</head>
+
+<body onload="initPage()">
+  <class="container">
+
+      <div class="w3-container">
+        <h1>Welcome to Open Shop!</h1>
+        <h2>Please take a second to sign in below.</h2>
+
+        <div id="clock">
+          <script language="javascript">
+            setInterval(displayClock, 500);
+          </script>
+        </div>
+
+        <h3>We have a mandatory safe space policy.</h3>
+          
+          <!--
+Name
+First Time
+Email
+Anything else?
+Would you like to receive general shop emails from us?
+Would you like to receive emails about volunteer opportunities?
+!-->
+          <form>
+          
+          <div class="form-row">    
+              <div class="col-sm-2">Name:</div>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" placeholder="First name" id="name1">
+            </div>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" placeholder="Last name" id="name2">
+              </div>
+            </div>
+
+        <div class="form-group row">
+            
+            <input type="email" class="form-control" id="inputEmail"placeholder="Enter email">
+        </div>
+
+        <div class="row">
+            <div class="w3-third">
+                <p>Would you like to receive email updates from us?</p>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="emailCheck1">
+                <label class="form-check-label" for="emailCheck1">General shop information</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="emailCheck2">
+                <label class="form-check-label" for="emailCheck2">
+                Volunteer opportunities</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="w3-third">
+        <p>Headset</p>
+      </div>
+
+      <div class="w3-third">
+        <p><button type="button" id="button7" class="btn btn-default">Feels fine
+        </button></p>
+      </div>
+
+    </div>
+
+
+    <br>
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
+        <button type="button" class="btn btn-block btn-primary"  id='checkinButton'>Check In
+          </button>
+      </div>
+    </div>
+          
+          </form>
+
+    <br><br>
+    <div class="printableArea">
+    <div class="row text-left" id="theseRepairsNeeded">
+      <div class="col-md-3"></div>
+      <div class="col-md-8 text-left">
+        <h3>Today's Attendance:</h3>
+      </div>
+    </div>
+    <div class="row text-left">
+      <div class="col-md-3"></div>
+      <div class="col-md-8" id="repairsGoHere"></div>
+    </div>
+    </div>
+
+    <br>
+    <div class="row">
+      <div class="col-md-2"></div>
+      <div class="col-md-8">
+        <button type="button" class="btn btn-block btn-primary printButton"  id='printButton' value='Print'>Print It
+          </button>
+      </div>
+    </div>
+
+<br><br>
+
+</div>
+
+</class="container">
+</body>
+</html>
